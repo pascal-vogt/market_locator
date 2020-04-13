@@ -12,7 +12,7 @@ export class AppComponent {
   constructor(
     private sessionService: SessionService
   ) {
-    this.sessionService.logIn('admin', '1234');
+    //this.sessionService.logIn('admin', '1234');
   }
 
 }

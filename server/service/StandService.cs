@@ -15,7 +15,7 @@
         {
             this.DatabaseContext = databaseContext;
         }
-
+        
         public async Task<IEnumerable<Stand>> GetAll()
         {
             return await this.DatabaseContext.Stand

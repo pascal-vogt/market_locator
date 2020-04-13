@@ -6,21 +6,29 @@
 
     public class DatabaseContext : DbContext
     {
+        public DbSet<Action> Action { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<RoleAssignment> RoleAssignment { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<Stand> Stand { get; set; }
+        public DbSet<AllowedGlobalActions> AllowedGlobalActions { get; set; }
+        public DbSet<AllowedStandSpecificActions> AllowedStandSpecificActions { get; set; }
 
         public DatabaseContext(IOptionsMonitor<AppConfig> appConfig)
         {
-            this.AppConfig = appConfig;
+            this.ConnectionString = appConfig.CurrentValue.ConnectionString;
+        }
+        
+        public DatabaseContext(string connectionString)
+        {
+            this.ConnectionString = connectionString;
         }
 
-        public IOptionsMonitor<AppConfig> AppConfig { get; set; }
+        public string ConnectionString { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(this.AppConfig.CurrentValue.ConnectionString);
+            optionsBuilder.UseNpgsql(this.ConnectionString);
         }
     }
 }
