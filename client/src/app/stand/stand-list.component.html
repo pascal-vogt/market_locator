@@ -3,7 +3,7 @@
     <tr *ngFor="let stand of stands">
       <td>{{stand.title}}</td>
       <td>{{stand.summary}}</td>
-      <td><a><i class="fa fa-edit"></i></a></td>
+      <td><a [routerLink]="[stand.id]"><i class="fa fa-edit"></i></a></td>
     </tr>
   </tbody>
 </table>

@@ -1,0 +1,215 @@
+<form *ngIf="stand" class="container">
+  <div class="form-row">
+    <div class="form-group col-6">
+      <label
+        for="title"
+      >
+        Title
+      </label>
+      <input
+        [(ngModel)]="stand.title"
+        name="title"
+        id="title"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group col-6">
+      <label
+        for="summary"
+      >
+        Summary
+      </label>
+      <input
+        [(ngModel)]="stand.summary"
+        name="summary"
+        id="summary"
+        class="form-control"
+      />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-6">
+      <label
+        for="email"
+      >
+        Email
+      </label>
+      <input
+        [(ngModel)]="stand.email"
+        name="email"
+        id="email"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group col-6">
+      <label
+        for="homepage"
+      >
+        Homepage
+      </label>
+      <input
+        [(ngModel)]="stand.homepage"
+        name="homepage"
+        id="homepage"
+        class="form-control"
+      />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-6">
+      <label
+        for="latitude"
+      >
+        Latitude
+      </label>
+      <input
+        [(ngModel)]="stand.latitude"
+        name="latitude"
+        id="latitude"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group col-6">
+      <label
+        for="longitude"
+      >
+        Longitude
+      </label>
+      <input
+        [(ngModel)]="stand.longitude"
+        name="longitude"
+        id="longitude"
+        class="form-control"
+      />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-6">
+      <label
+        for="phone"
+      >
+        Phone
+      </label>
+      <input
+        [(ngModel)]="stand.phone"
+        name="phone"
+        id="phone"
+        class="form-control"
+      />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="stand.openMo"
+          id="openMo"
+          name="openMo"
+        >
+        <label
+          class="form-check-label"
+          for="openMo">
+          Montag
+        </label>
+      </div>
+    </div>
+    <div class="form-group col-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="stand.openTu"
+          id="openTu"
+          name="openTu"
+        >
+        <label
+          class="form-check-label"
+          for="openTu">
+          Dienstag
+        </label>
+      </div>
+    </div>
+    <div class="form-group col-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="stand.openWe"
+          id="openWe"
+          name="openWe"
+        >
+        <label
+          class="form-check-label"
+          for="openWe">
+          Mittwoch
+        </label>
+      </div>
+    </div>
+    <div class="form-group col-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="stand.openTh"
+          id="openTh"
+          name="openTh"
+        >
+        <label
+          class="form-check-label"
+          for="openTh">
+          Donnerstag
+        </label>
+      </div>
+    </div>
+    <div class="form-group col-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="stand.openFr"
+          id="openFr"
+          name="openFr"
+        >
+        <label
+          class="form-check-label"
+          for="openFr">
+          Freitag
+        </label>
+      </div>
+    </div>
+    <div class="form-group col-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="stand.openSa"
+          id="openSa"
+          name="openSa"
+        >
+        <label
+          class="form-check-label"
+          for="openSa">
+          Samstag
+        </label>
+      </div>
+    </div>
+    <div class="form-group col-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="stand.openSu"
+          id="openSu"
+          name="openSu"
+        >
+        <label
+          class="form-check-label"
+          for="openSu">
+          Sonntag
+        </label>
+      </div>
+    </div>
+  </div>
+</form>

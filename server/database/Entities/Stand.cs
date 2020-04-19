@@ -6,7 +6,7 @@
     public class Stand
     {
         [Column("STAND_ID")] 
-        public long Id { get; set; }
+        public long? Id { get; set; }
             
         [Column("LATITUDE")]
         public double Latitude { get; set; }

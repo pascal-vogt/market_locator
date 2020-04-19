@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MarketMapComponent } from './market-map/market-map.component';
 import { StandListComponent } from './stand/stand-list.component';
 import { StandEditComponent } from './stand/stand-edit.component';
+import {FormsModule} from '@angular/forms';
 
 const appRoutes: Routes = [
   {
@@ -38,7 +39,8 @@ const appRoutes: Routes = [
   imports: [
     HttpClientModule,
     BrowserModule,
-    RouterModule.forRoot(appRoutes, { useHash: true })
+    RouterModule.forRoot(appRoutes, {useHash: true}),
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

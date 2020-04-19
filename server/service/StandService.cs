@@ -23,5 +23,49 @@
                 .OrderBy(o => o.Title)
                 .ToListAsync();
         }
+
+        public async Task<Stand> GetById(long standId)
+        {
+            return await this.DatabaseContext.Stand
+                .AsQueryable()
+                .FirstOrDefaultAsync(o => o.Id == standId);
+        }
+        
+        public async Task<Stand> GetByIdForUpdate(long standId)
+        {
+            return await this.DatabaseContext.Stand
+                .AsTracking()
+                .FirstOrDefaultAsync(o => o.Id == standId);
+        }
+
+        public async Task<Stand> Update(Stand standFromDb, Stand stand)
+        {
+            standFromDb.Email = stand.Email;
+            standFromDb.Homepage = stand.Homepage;
+            standFromDb.Latitude = stand.Latitude;
+            standFromDb.Longitude = stand.Longitude;
+            standFromDb.Phone = stand.Phone;
+            standFromDb.Summary = stand.Summary;
+            standFromDb.Title = stand.Title;
+            standFromDb.OpenMo = stand.OpenMo;
+            standFromDb.OpenTu = stand.OpenTu;
+            standFromDb.OpenWe = stand.OpenWe;
+            standFromDb.OpenTh = stand.OpenTh;
+            standFromDb.OpenFr = stand.OpenFr;
+            standFromDb.OpenSa = stand.OpenSa;
+            standFromDb.OpenSu = stand.OpenSu;
+
+            await this.DatabaseContext.SaveChangesAsync();
+
+            return standFromDb;
+        }
+
+        public async Task<Stand> Create(Stand stand)
+        {
+            stand.Id = null;
+            await this.DatabaseContext.Stand.AddAsync(stand);
+
+            return stand;
+        }
     }
 }
