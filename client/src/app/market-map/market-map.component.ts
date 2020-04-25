@@ -1,5 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import * as L from 'leaflet';
+import {Router} from '@angular/router';
+import {StandService} from '../../services/stand.service';
 
 @Component({
   templateUrl: './market-map.component.html',
@@ -7,6 +9,14 @@ import * as L from 'leaflet';
 })
 export class MarketMapComponent implements AfterViewInit {
   private map: any;
+  private userPosMarker: any;
+  private userCircleMarker: any;
+  private showUserPos: boolean;
+
+  constructor(
+    private router: Router,
+    private standService: StandService
+  ) {}
 
   ngAfterViewInit(): void {
     this.map = L.map('map', {
@@ -15,6 +25,21 @@ export class MarketMapComponent implements AfterViewInit {
       zoomControl: false
     });
 
+    const iconRetinaUrl = 'assets/marker-icon-2x.png';
+    const iconUrl = 'assets/marker-icon.png';
+    const shadowUrl = 'assets/marker-shadow.png';
+    const iconDefault = L.icon({
+      iconRetinaUrl,
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41]
+    });
+    L.Marker.prototype.options.icon = iconDefault;
+
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -22,15 +47,49 @@ export class MarketMapComponent implements AfterViewInit {
 
     this.map.setView(new L.LatLng(46.948316, 7.445910), 15);
 
-    const onLocationFound = (e) => {
-      const radius = e.accuracy / 2;
-      L.marker(e.latlng).addTo(this.map);
-      L.circle(e.latlng, radius).addTo(this.map);
-    };
-
-    this.map.on('locationfound', onLocationFound);
-    this.map.locate({ watch: true });
+    this.map.on('locationfound', this.onLocationFound.bind(this));
 
     tiles.addTo(this.map);
+
+    this.standService.getAll().subscribe(stands => {
+      for (let stand of stands) {
+        L.marker([stand.latitude, stand.longitude]).addTo(this.map);
+      }
+    });
+  }
+
+  removeLocationMarkers() {
+    if (this.userCircleMarker) {
+      this.map.removeLayer(this.userCircleMarker);
+      this.map.removeLayer(this.userPosMarker);
+    }
+  }
+
+  onLocationFound(e) {
+    if (this.showUserPos) {
+      const radius = e.accuracy / 2;
+      this.removeLocationMarkers();
+      this.userPosMarker = L.marker(e.latlng)
+      this.userPosMarker.addTo(this.map);
+      this.userCircleMarker = L.circle(e.latlng, radius);
+      this.userCircleMarker.addTo(this.map);
+    }
+  }
+
+  locateMe() {
+    this.showUserPos = !this.showUserPos;
+    if (this.showUserPos) {
+      if (this.userCircleMarker) {
+        this.userPosMarker.addTo(this.map);
+        this.userCircleMarker.addTo(this.map);
+      }
+      this.map.locate({ watch: true });
+    } else {
+      this.removeLocationMarkers();
+    }
+  }
+
+  openSettings() {
+    this.router.navigate(['/stands']);
   }
 }

@@ -1,6 +1,7 @@
 {
   "AppConfig": {
-    "ConnectionString": "Host=localhost;Database=market_locator;Username=market_locator_app;Password=1234"
+    "ConnectionString": "Host=localhost;Database=market_locator;Username=market_locator_app;Password=1234",
+    "SpreadsheetId": "you can find it in the url of the spreadsheet, just paste that part here"
   },
   "Logging": {
     "LogLevel": {

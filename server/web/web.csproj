@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Google.Apis" Version="1.45.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.3" />
     </ItemGroup>
@@ -13,6 +14,12 @@
     <ItemGroup>
       <ProjectReference Include="..\database\database.csproj" />
       <ProjectReference Include="..\service\service.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="google_api_secret.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 
