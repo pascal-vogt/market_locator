@@ -12,21 +12,25 @@
     {
         private StandService StandService { get; set; }
         private IAuthorizationService AuthorizationService { get; set; }
+        private GoogleDocImportService GoogleDocImportService { get; set; }
 
         public StandsController(
             StandService standService,
+            GoogleDocImportService googleDocImportService,
             IAuthorizationService authorizationService
         )
         {
             this.StandService = standService;
             this.AuthorizationService = authorizationService;
+            this.GoogleDocImportService = googleDocImportService;
         }
         
         [HttpGet]
         [Authorize(Policy = "STAND_R")]
         public async Task<ActionResult> GetAll()
         {
-            return this.Ok(await this.StandService.GetAll());
+            return this.Ok(await this.GoogleDocImportService.GetStands());
+            //return this.Ok(await this.StandService.GetAll());
         }
         
         [HttpGet]

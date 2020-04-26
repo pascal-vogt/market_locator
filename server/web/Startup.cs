@@ -35,6 +35,7 @@ namespace Web
             services.AddScoped<DatabaseContext>();
             services.AddScoped<SessionService>();
             services.AddScoped<StandService>();
+            services.AddScoped<GoogleDocImportService>();
 
             services.AddAuthorization(options =>
             {
