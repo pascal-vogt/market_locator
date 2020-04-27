@@ -18,6 +18,7 @@
 // Those IDs can be retrieved by going to the tab and then looking for #gid= in the URL
 var GPS_COORDS_SHEET_ID = 1072628029;
 var MAPPING_SHEET_ID = 992876922;
+var MANUAL_INPUT_SHEET_ID = 2132362629;
 var OUTPUT_SHEET_ID = 1330311051;
 
 function getActiveSheetId(){
@@ -44,6 +45,28 @@ function getGPSMap() {
     }
   }
   return map;
+}
+
+function getManuallyInputData() {
+  var sheet = getSheetById(MANUAL_INPUT_SHEET_ID);
+  var data = sheet.getDataRange().getValues();
+  var entries = [];
+  var headers = data[0];
+  for(var i = 1; i < data.length; ++i){
+    var row = data[i];
+    var entry = {};
+    for (var j = 0; j < row.length; ++j) {
+      entry[headers[j]] = row[j];
+    }
+    // TODO: we can do this unconditionally as soon as the source tab no longer has the data we are currently constructing ourselves
+    if (entry['Datum'] === undefined || entry['Zeiten'].length === 0) {
+      entries.push(entry);
+    }
+  }
+  return {
+    headers: headers,
+    entries: entries
+  };
 }
 
 function formatDate(date) {
@@ -117,10 +140,28 @@ function transformData() {
     return 0;
   });
   
-  var header = ['Name', 'Kategorie', 'Tag', 'Datum', 'Zeiten', 'Adresse / Koordinaten', 'Tel', 'Typ', 'Cover', 'Website', 'Video', 'Social'];
-  var newData = [header];
+  var manualyInputData = getManuallyInputData();
+  var headers = manualyInputData.headers;
+  var newData = [headers];
+  var entries = manualyInputData.entries.slice(); // makes a copy
   for (let entry of mappingData) {
-    newData.push([entry.name, '', entry.weekday, entry.weekdayDate, '', gpsMap[entry.gpsRef], '', '', '', '', '', '']);
+    entries.push({
+      'Name kommt noch': entry.name,
+      'Tag': entry.weekday,
+      'Datum': entry.weekdayDate,
+      'Adresse / Koordinaten': gpsMap[entry.gpsRef]
+    });
+  }
+  for (let entry of entries) {
+    var row = [];
+    for (let header of headers) {
+      if (entry[header]) {
+        row.push(entry[header]);
+      } else {
+        row.push('');
+      }
+    }
+    newData.push(row);
   }
   
   var outSheet = getSheetById(OUTPUT_SHEET_ID);
