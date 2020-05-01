@@ -20,6 +20,7 @@ var GPS_COORDS_SHEET_ID = 1072628029;
 var MAPPING_SHEET_ID = 992876922;
 var MANUAL_INPUT_SHEET_ID = 363229505;
 var OUTPUT_SHEET_ID = 2132362629;
+var TEST_OUTPUT_SHEET_ID = 1330311051;
 
 function getSheetById_(gid){
   for (var sheet of SpreadsheetApp.getActive().getSheets()) {
@@ -124,7 +125,15 @@ function getMappingData_() {
   return entries;
 }
 
-function transformData() {
+function transformData_Prod() {
+  transformDataToSheetId_(OUTPUT_SHEET_ID);
+}
+
+function transformData_Test() {
+  transformDataToSheetId_(TEST_OUTPUT_SHEET_ID);
+}
+
+function transformDataToSheetId_(outputSheetId) {
   var gpsMap = getGPSMap_();
   var mappingData = getMappingData_();
   
@@ -179,7 +188,7 @@ function transformData() {
   });
   newData.unshift(headers);
   
-  var outSheet = getSheetById_(OUTPUT_SHEET_ID);
+  var outSheet = getSheetById_(outputSheetId);
   outSheet.getDataRange().clearContent();
   outSheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
 }
