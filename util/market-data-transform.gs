@@ -18,8 +18,8 @@
 // Those IDs can be retrieved by going to the tab and then looking for #gid= in the URL
 var GPS_COORDS_SHEET_ID = 1072628029;
 var MAPPING_SHEET_ID = 992876922;
-var MANUAL_INPUT_SHEET_ID = 2132362629;
-var OUTPUT_SHEET_ID = 1330311051;
+var MANUAL_INPUT_SHEET_ID = 363229505;
+var OUTPUT_SHEET_ID = 2132362629;
 
 function getSheetById_(gid){
   for (var sheet of SpreadsheetApp.getActive().getSheets()) {
@@ -52,8 +52,7 @@ function getManuallyInputData_() {
     for (var j = 0; j < row.length; ++j) {
       entry[headers[j]] = row[j];
     }
-    // TODO: we can remove the condition with 'Datum' as soon as the source tab no longer has the data we are currently constructing ourselves
-    if (entry['Datum'].length === 0 && entry['Zeiten'].length > 0) {
+    if (entry['Name kommt noch'].length > 0) {
       entries.push(entry);
     }
   }
