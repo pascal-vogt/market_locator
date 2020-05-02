@@ -1,6 +1,6 @@
 /////////////////////////////////////////
-// This script transforms data from the "Input" and "Ref" data into a format compatible with 
-// The resulting data gets written into the "ScriptOutput" tab
+// This script transforms data from the "Marktstände-Manuell", "Input" and "Ref" data into a format compatible with "Marktstände-Manuell"
+// The resulting data gets written into the "Marktstände-Script" tab (prod) or the "Script Test Output" tab (test)
 //
 // How to use:
 // - Open spreadsheet https://docs.google.com/spreadsheets/d/1VFZRShq8bMyWcN0ANQdLmPPc-CoPWMwr29MkdVboyRA/edit
@@ -8,7 +8,10 @@
 // - Accept permissions to edit sheets
 // - Create a file "market-data-transform.gs" with the contents of this file
 // - Save
-// - Choose transformData() in the dropdown above
+// - Choose transformData_Test() in the dropdown above
+// - Click the Run or the Debug button
+// - Check if the output in "Script Test Output" looks OK
+// - Choose transformData_Prod() in the dropdown above
 // - Click the Run or the Debug button
 //
 // Additional Important steps
@@ -70,6 +73,10 @@ function formatDate_(date) {
   return (d < 10 ? '0' + d : d) + '.' + (m < 10 ? '0' + m : m) + '.' + y;
 }
 
+function formatWeekday_(date) {
+  return ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'][date.getDay()];
+}
+
 function getMappingData_() {
   var now = new Date();
   var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -77,10 +84,7 @@ function getMappingData_() {
   var mappingSheet = getSheetById_(MAPPING_SHEET_ID);
   var data = mappingSheet.getDataRange().getValues();
   var header = data[0];
-  var minCol = undefined;
-  var maxCol = undefined;
-  var weekdayOffset = undefined;
-  var weekdayDates = [];
+  var relevantColumns = [];
   var metadataIndexes = {};
   for (var i = 1;  i < header.length; ++i) {
     var cell = header[i];
@@ -90,12 +94,11 @@ function getMappingData_() {
       var dateDiffInDays = (date - today) / (1000 * 60 * 60 * 24);
       // sliding week window
       if (dateDiffInDays >= 0 && dateDiffInDays < 7) {
-        if (minCol === undefined) {
-          minCol = i;
-          weekdayOffset = date.getDay(); // 0 for sunday
-        }
-        maxCol = i;
-        weekdayDates.push(formatDate_(date));
+        relevantColumns.push({
+          index: i,
+          weekday: formatWeekday_(date),
+          date: formatDate_(date)
+        });
       }
     } else {
       metadataIndexes[cell] = i;
@@ -104,19 +107,18 @@ function getMappingData_() {
   var entries = [];
   for(var i = 1; i < data.length; ++i){
     var name = data[i][0];
-    for (var j = minCol; j <= maxCol; ++j) {
-      var weekday = (weekdayOffset + (j - minCol)) % 7;
-      if (data[i][j] != null && data[i][j] != '') {
+    for (var relevantColumn of relevantColumns) {
+      var cell = data[i][relevantColumn.index];
+      if (cell != null && cell != '') {
         var metadata = {};
         for (let key of Object.keys(metadataIndexes)) {
           metadata[key] = data[i][metadataIndexes[key]];
         }
         entries.push({
           name: name,
-          weekday: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'][weekday],
-          weekdayIdx: weekday,
-          gpsRef: data[i][j],
-          weekdayDate: weekdayDates[j - minCol],
+          weekday: relevantColumn.weekday,
+          date: relevantColumn.date,
+          gpsRef: cell,
           metadata: metadata
         });
       }
@@ -145,7 +147,7 @@ function transformDataToSheetId_(outputSheetId) {
     let entry = {
       'Name kommt noch': mappingEntry.name,
       'Tag': mappingEntry.weekday,
-      'Datum': mappingEntry.weekdayDate,
+      'Datum': mappingEntry.date,
       'Adresse / Koordinaten': gpsMap[mappingEntry.gpsRef]
     };
     for (let key of Object.keys(mappingEntry.metadata)) {
