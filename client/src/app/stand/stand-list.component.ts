@@ -6,10 +6,12 @@ import { Stand } from '../model/stand';
   templateUrl: './stand-list.component.html'
 })
 export class StandListComponent implements OnInit {
-  private stands: Stand[];
+  public stands: Stand[];
+
   constructor(
     private standService: StandService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.standService.getAll().subscribe(stands => {

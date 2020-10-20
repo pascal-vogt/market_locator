@@ -1,26 +1,27 @@
-import {AfterViewInit, Component} from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
-import {Router} from '@angular/router';
-import {StandService} from '../../services/stand.service';
+import { Router } from '@angular/router';
+import { StandService } from '../../services/stand.service';
 
 @Component({
   templateUrl: './market-map.component.html',
   styleUrls: ['./market-map.component.scss']
 })
 export class MarketMapComponent implements AfterViewInit {
-  private map: any;
-  private userPosMarker: any;
-  private userCircleMarker: any;
-  private showUserPos: boolean;
+  public map: any;
+  public userPosMarker: any;
+  public userCircleMarker: any;
+  public showUserPos: boolean;
 
   constructor(
     private router: Router,
     private standService: StandService
-  ) {}
+  ) {
+  }
 
   ngAfterViewInit(): void {
     this.map = L.map('map', {
-      center: [ 39.8282, -98.5795 ],
+      center: [39.8282, -98.5795],
       zoom: 3,
       zoomControl: false
     });
@@ -69,7 +70,7 @@ export class MarketMapComponent implements AfterViewInit {
     if (this.showUserPos) {
       const radius = e.accuracy / 2;
       this.removeLocationMarkers();
-      this.userPosMarker = L.marker(e.latlng)
+      this.userPosMarker = L.marker(e.latlng);
       this.userPosMarker.addTo(this.map);
       this.userCircleMarker = L.circle(e.latlng, radius);
       this.userCircleMarker.addTo(this.map);
@@ -83,7 +84,7 @@ export class MarketMapComponent implements AfterViewInit {
         this.userPosMarker.addTo(this.map);
         this.userCircleMarker.addTo(this.map);
       }
-      this.map.locate({ watch: true });
+      this.map.locate({watch: true});
     } else {
       this.removeLocationMarkers();
     }
